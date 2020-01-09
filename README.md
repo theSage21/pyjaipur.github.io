@@ -10,13 +10,8 @@
    git clone https://github.com/<MyFork>/pyjaipur.github.io
    cd pyjaipur.github.io
    pipenv install --dev --deploy
-   pipenv run python -m website build
+   pipenv run python -m staticsite build
    ```
 3. To run the site any one of these will work.
     - Site will be built to `docs/` folder. You can open the `index.html` file to see.
     - `pipenv run python -m http.server` can serve the website at http://localhost:8000
-
-
-## Misc commands
-
-Please use `pipenv run python -m website --help` to get latest help.
