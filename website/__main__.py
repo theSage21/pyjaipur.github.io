@@ -1,4 +1,6 @@
 import argparse
+from website.builder import build
+from website.watcher import watch
 
 parser = argparse.ArgumentParser(
     description=(
@@ -12,9 +14,16 @@ parser.add_argument(
     choices=["build", "watch"],
     help="What action do you want to take?",
 )
+parser.add_argument("--src", default="templates")
+parser.add_argument("--target", default="docs")
 
 args = parser.parse_args()
 if args.cmd == "build":
-    from site.builder import build
 
-    build(src="templates", target="docs")
+    build(src=args.src, target=args.target)
+elif args.cmd == "watch":
+
+    def on_change():
+        build(src=args.src, target=args.target)
+
+    watch(args.src, on_change)

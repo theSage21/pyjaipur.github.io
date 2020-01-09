@@ -10,6 +10,8 @@ pre-commit = "*"
 
 [packages]
 jinja2 = "*"
+htmlmin = "*"
+watchdog = "*"
 
 [requires]
 python_version = "3.6"

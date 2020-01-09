@@ -1,18 +1,32 @@
 import os
+import shutil
 import htmlmin
 from jinja2 import Environment, FileSystemLoader, Template
 
+from website.discovery import get_files
 
-def build(src, target, files=None):
+
+def build(src, target, files=None, endswith_whitelist=("html", "css", "js")):
     """
     Build "files" from "src" to "target".
     If "files" is None, build everything in "src".
     """
+
+    def walk(folder):
+        return [i for i in get_files(os.path.join(src, folder), src)]
+
     env = Environment(loader=FileSystemLoader(src))
-    # Get build targets
-    # render HTML
-    # minify
-    # write to target folder
-    template = env.get_template("path/to/file.html")
-    html = template.render()
-    html = htmlmin.minify(html)
+    env.globals["walk"] = walk
+    for template_path in get_files(src, src):
+        target_path = os.path.join(target, template_path)
+        target_dirname = os.path.dirname(target_path)
+        if not os.path.exists(target_dirname):
+            os.makedirs(target_dirname, exist_ok=True)
+        if any(template_path.endswith(ext) for ext in endswith_whitelist):
+            template = env.get_template(template_path)
+            html = template.render()
+            html = htmlmin.minify(html)
+            with open(target_path, "w") as fl:
+                fl.write(html)
+        else:
+            shutil.copy(os.path.join(src, template_path), target_path)

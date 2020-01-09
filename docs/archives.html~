@@ -1,0 +1,18 @@
+{% extends '.base.html' %}
+{% block head %}
+{{ super() }}
+img {
+width: 100%;
+height: auto;
+}
+{% endblock %}
+
+{% block content %}
+<p>
+Our meetups and events are managed using Github.
+Previous meetups can be found on our <a href='https://github.com/PyJaipur/PyJaipur/milestones?state=closed' target='_blank'>github milestones</a>.
+</p>
+{% for pth in walk("images/archive") %}
+  <img src="/{{ pth }}" alt="archive image {{ pth }}">
+{% endfor %}
+{% endblock %}
