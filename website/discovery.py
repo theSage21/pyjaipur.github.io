@@ -1,7 +1,7 @@
 import os
 
 
-def get_files(root, src=None, *, skip_hidden=True, endswith_blacklist=(".swp",)):
+def get_files(root, src=None, *, skip_hidden=True, endswith_blacklist=(".swp", "~")):
     """
     root is the folder currently being walked
     src  is the where the paths are being relatively calculated from
