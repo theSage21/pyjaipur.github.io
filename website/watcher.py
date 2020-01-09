@@ -26,7 +26,9 @@ def watch(src, trigger_fn, *, interval=0.3):
             ).hexdigest()
             if new_hsh != last_hsh:
                 print("Merkel tree hash:", new_hsh, end="\r")
-                trigger_fn()
+                trigger_fn(
+                    sitehash=new_hsh, autoreload=True, check_interval=interval * 1000
+                )
             last_hsh = new_hsh
         except Exception:
             pass

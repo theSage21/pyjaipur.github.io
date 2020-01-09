@@ -6,7 +6,15 @@ from jinja2 import Environment, FileSystemLoader, Template
 from website.discovery import get_files
 
 
-def build(src, target, files=None, endswith_whitelist=("html", "css", "js")):
+def build(
+    src,
+    target,
+    files=None,
+    *,
+    endswith_whitelist=("html", "css", "js"),
+    sitehash_path=".sitehash.txt",
+    variables=None
+):
     """
     Build "files" from "src" to "target".
     If "files" is None, build everything in "src".
@@ -17,6 +25,9 @@ def build(src, target, files=None, endswith_whitelist=("html", "css", "js")):
 
     env = Environment(loader=FileSystemLoader(src))
     env.globals["walk"] = walk
+    env.globals["site_hash_path"] = sitehash_path
+    if variables is not None:
+        env.globals.update(variables)
     for template_path in get_files(src, src):
         target_path = os.path.join(target, template_path)
         target_dirname = os.path.dirname(target_path)
@@ -30,3 +41,7 @@ def build(src, target, files=None, endswith_whitelist=("html", "css", "js")):
                 fl.write(html)
         else:
             shutil.copy(os.path.join(src, template_path), target_path)
+        if variables.get("sitehash") is not None:
+            path = os.path.join(target, sitehash_path)
+            with open(path, "w") as fl:
+                fl.write(variables["sitehash"])

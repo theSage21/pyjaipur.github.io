@@ -1,7 +1,7 @@
 import os
 
 
-def get_files(root, src=None, *, skip_hidden=True):
+def get_files(root, src=None, *, skip_hidden=True, endswith_blacklist=(".swp",)):
     """
     root is the folder currently being walked
     src  is the where the paths are being relatively calculated from
@@ -12,4 +12,5 @@ def get_files(root, src=None, *, skip_hidden=True):
             if os.path.isdir(path):
                 yield from get_files(path, src)
             else:
-                yield os.path.relpath(path, src) if src is not None else path
+                if not any(path.endswith(ext) for ext in endswith_blacklist):
+                    yield os.path.relpath(path, src) if src is not None else path

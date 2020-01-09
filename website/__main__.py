@@ -23,7 +23,7 @@ if args.cmd == "build":
     build(src=args.src, target=args.target)
 elif args.cmd == "watch":
 
-    def on_change():
-        build(src=args.src, target=args.target)
+    def on_change(**variables):
+        build(src=args.src, target=args.target, variables=variables)
 
     watch(args.src, on_change)
